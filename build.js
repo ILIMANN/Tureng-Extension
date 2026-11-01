@@ -22,8 +22,20 @@ function buildManifest(target) {
     delete manifest.browser_specific_settings;
     delete manifest.developer;
   } else if (target === "firefox") {
+    manifest.developer = {
+      name: "Mehmet Efe İliman",
+      url: "https://www.linkedin.com/in/efeiliman/",
+    };
     manifest.background = {
       scripts: ["scripts/background.js"],
+    };
+    manifest.browser_specific_settings = {
+      gecko: {
+        id: "tureng-dictionary@ilimann",
+        data_collection_permissions: {
+          required: ["none"],
+        },
+      },
     };
   }
 
