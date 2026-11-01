@@ -1,5 +1,9 @@
 {
   "author": "Kerim Demirel, Ali Emre Karatopuk, Mehmet Efe İliman",
+  "developer": {
+    "name": "Mehmet Efe İliman",
+    "url": "https://www.linkedin.com/in/efeiliman/"
+  },
   "manifest_version": 3,
   "name": "Tureng Dictionary",
   "short_name": "Tureng",
@@ -25,7 +29,7 @@
     "https://translate.google.com/*"
   ],
   "background": {
-    "service_worker": "scripts/background.js"
+    "scripts": ["scripts/background.js"]
   },
   "options_ui": {
     "page": "info.html"
@@ -38,6 +42,14 @@
         "linux": "Alt+Z",
         "mac": "Alt+Z",
         "windows": "Alt+Z"
+      }
+    }
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "tureng-dictionary@ilimann",
+      "data_collection_permissions": {
+        "required": ["none"]
       }
     }
   }

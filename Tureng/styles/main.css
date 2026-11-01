@@ -124,15 +124,6 @@ body.history-view #clear-search {
   box-shadow: 0 0 0 0.05rem rgba(189, 30, 44, 0.25);
 }
 
-#search-input::-webkit-search-decoration,
-#search-input::-webkit-search-cancel-button,
-#search-input::-webkit-search-results-button,
-#search-input::-webkit-search-results-decoration {
-  -webkit-appearance: none;
-  appearance: none;
-  display: none;
-}
-
 #tureng {
   background-color: rgb(155, 10, 25);
   border: 2px solid rgb(155, 10, 25);

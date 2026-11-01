@@ -140,13 +140,13 @@ Install directly with one click from Mozilla Add-ons (AMO):
 
 ## 🛠️ Build from Source
 
-To generate both browser packages (`tureng-chrome.zip` and `tureng-firefox.zip`) from the `Tureng/` source directory:
+The source code in `Tureng/` targets **Firefox** natively. To package `tureng-firefox.zip` directly and generate a Chrome-compatible `tureng-chrome.zip`:
 
 ```bash
 node build.js
 ```
 
-This script packages the extension with browser-specific Manifest V3 configurations (`service_worker` for Chrome, background `scripts` + `browser_specific_settings.gecko` for Firefox).
+This script packages `Tureng/` as-is for Firefox and transforms the manifest (`service_worker`, removing Firefox-only keys), `browser.*` APIs, message serialization, and styles for Chrome.
 
 ---
 

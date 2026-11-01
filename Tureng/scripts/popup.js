@@ -1,6 +1,5 @@
 "use strict";
 
-const ext = globalThis.browser ?? globalThis.chrome;
 const parser = new DOMParser();
 const HISTORY_STORAGE_KEY = "tureng_history";
 const MAX_HISTORY_ITEMS = 50;
@@ -354,7 +353,7 @@ function tureng(str) {
   if (!str || !str.trim()) return;
   str = resetSearchUI(str.trim());
 
-  ext.runtime
+  browser.runtime
     .sendMessage({ type: "TURENG_SEARCH", query: str })
     .then((response) => {
       if (!response || !response.ok) {
@@ -444,15 +443,15 @@ document
 // Popup açılışında seçili kelimeyi search_box'a yapıştırır, formu submit eder.
 // Paste the selected word to the search_box on popup open, then submit the form.
 window.onload = async () => {
-  const [tab] = await ext.tabs.query({ active: true, currentWindow: true });
+  const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
   let result;
   try {
-    [{ result }] = await ext.scripting.executeScript({
+    [{ result }] = await browser.scripting.executeScript({
       target: { tabId: tab.id },
       func: () => getSelection().toString(),
     });
   } catch (e) {
-    // ignoring an unsupported page like about:addons or chrome://extensions
+    // ignoring an unsupported page like about:addons
   }
 
   const trimmedResult = result ? result.trim() : "";
@@ -470,7 +469,7 @@ const playPronunciation = async (text, lang) => {
   if (!trimmed) return;
 
   try {
-    const response = await ext.runtime.sendMessage({
+    const response = await browser.runtime.sendMessage({
       type: "TURENG_TTS",
       text: trimmed,
       lang,
@@ -478,9 +477,7 @@ const playPronunciation = async (text, lang) => {
 
     if (!response || !response.ok || !response.buffer) return;
 
-    const blob = new Blob([new Uint8Array(response.buffer)], {
-      type: "audio/mpeg",
-    });
+    const blob = new Blob([response.buffer], { type: "audio/mpeg" });
     const audioUrl = URL.createObjectURL(blob);
     const audio = new Audio(audioUrl);
 
@@ -509,7 +506,7 @@ document.getElementById("flag-au").addEventListener("click", () => {
 
 document.getElementById("tureng-logo").addEventListener("click", () => {
   const query = document.getElementById("search-input").value.trim();
-  ext.tabs.create({
+  browser.tabs.create({
     url:
       "https://tureng.com/tr/turkce-ingilizce/" +
       encodeURIComponent(query),
