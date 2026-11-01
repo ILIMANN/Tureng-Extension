@@ -1,6 +1,80 @@
 "use strict";
 
 const parser = new DOMParser();
+const HISTORY_STORAGE_KEY = "tureng_history";
+const MAX_HISTORY_ITEMS = 50;
+
+function getHistory() {
+  try {
+    const raw = localStorage.getItem(HISTORY_STORAGE_KEY);
+    const parsed = raw ? JSON.parse(raw) : [];
+    return Array.isArray(parsed) ? parsed : [];
+  } catch (e) {
+    return [];
+  }
+}
+
+function addToHistory(word) {
+  const trimmed = word ? word.trim() : "";
+  if (!trimmed) return;
+
+  const history = getHistory().filter(
+    (item) => item.toLowerCase() !== trimmed.toLowerCase()
+  );
+  history.unshift(trimmed);
+  if (history.length > MAX_HISTORY_ITEMS) {
+    history.length = MAX_HISTORY_ITEMS;
+  }
+
+  try {
+    localStorage.setItem(HISTORY_STORAGE_KEY, JSON.stringify(history));
+  } catch (e) {
+    console.error("addToHistory()", e);
+  }
+}
+
+function createHistoryList(historyItems) {
+  const listGroup = document.createElement("div");
+  listGroup.className = "list-group history-list";
+
+  historyItems.forEach((word) => {
+    const item = document.createElement("a");
+    item.href = "#";
+    item.className = "list-group-item list-group-item-action history-item";
+
+    const icon = document.createElement("i");
+    icon.className = "fa fa-history history-icon";
+    icon.setAttribute("aria-hidden", "true");
+
+    const textSpan = document.createElement("span");
+    textSpan.className = "history-word";
+    textSpan.textContent = word;
+
+    item.append(icon, textSpan);
+    item.addEventListener("click", (e) => {
+      e.preventDefault();
+      tureng(word);
+    });
+
+    listGroup.appendChild(item);
+  });
+
+  return listGroup;
+}
+
+function showHistory() {
+  document.body.classList.add("history-view");
+  document.getElementById("voice-tts").style.display = "none";
+  document.getElementById("loading").style.display = "none";
+  resetContentElement();
+
+  const history = getHistory();
+  if (history.length > 0) {
+    document
+      .getElementById("content")
+      .appendChild(createHistoryList(history));
+  }
+}
 
 function cleanAndDecode(str) {
   const cleaned = safeResponse.cleanDomString(str);
@@ -260,66 +334,71 @@ function resetContentElement() {
 }
 
 function resetSearchUI(str) {
+  document.body.classList.remove("history-view");
   resetContentElement();
   document.getElementById("search-input").value = str;
   document.getElementById("loading").style.display = "block";
   document.getElementsByClassName("inner-shadow")[0].style.backgroundColor =
     "#BD1E2C";
 
-    document.querySelectorAll(".pie, .dot span").forEach((el) => {
-      el.style.backgroundColor =
-        "#" + (((1 << 24) * Math.random()) | 0).toString(16).padStart(6, "0");
-    });
-  
-    return str;
-  }
-  
+  document.querySelectorAll(".pie, .dot span").forEach((el) => {
+    el.style.backgroundColor =
+      "#" + (((1 << 24) * Math.random()) | 0).toString(16).padStart(6, "0");
+  });
+
+  return str;
+}
+
 function tureng(str) {
   if (!str || !str.trim()) return;
   str = resetSearchUI(str.trim());
 
   browser.runtime
-  .sendMessage({ type: "TURENG_SEARCH", query: str })
-  .then((response) => {
-    if (!response || !response.ok) {
-      notFound(str);
-      return;
-    }
-
-    const doc = parser.parseFromString(response.html, "text/html");
-    const descriptionSection = doc.querySelector("section.term-description-box");
-    const checkSearchResults = doc.querySelectorAll(".searchResultsTable");
-    const suggestionList = doc.querySelectorAll("ul.suggestion-list li");
-
-    const contentEl = document.getElementById("content");
-
-    if (suggestionList.length > 0 && checkSearchResults.length === 0) {
-      contentEl.appendChild(suggestedQueries(str, suggestionList));
-      document.getElementById("voice-tts").style.display = "none";
-    } else if (checkSearchResults.length > 0) {
-      if (descriptionSection) {
-        const summaryBox = createSummaryBox(descriptionSection);
-        if (summaryBox) {
-          contentEl.appendChild(summaryBox);
-        }
+    .sendMessage({ type: "TURENG_SEARCH", query: str })
+    .then((response) => {
+      if (!response || !response.ok) {
+        notFound(str);
+        return;
       }
 
-      checkSearchResults.forEach((table) => {
-        const newTable = createTranslationTable(table);
-        contentEl.appendChild(newTable);
-      });
+      const doc = parser.parseFromString(response.html, "text/html");
+      const descriptionSection = doc.querySelector(
+        "section.term-description-box"
+      );
+      const checkSearchResults = doc.querySelectorAll(".searchResultsTable");
+      const suggestionList = doc.querySelectorAll("ul.suggestion-list li");
 
-      document.getElementById("voice-tts").style.display = "block";
-    } else {
+      const contentEl = document.getElementById("content");
+
+      if (suggestionList.length > 0 && checkSearchResults.length === 0) {
+        contentEl.appendChild(suggestedQueries(str, suggestionList));
+        document.getElementById("voice-tts").style.display = "none";
+      } else if (checkSearchResults.length > 0) {
+        addToHistory(str);
+
+        if (descriptionSection) {
+          const summaryBox = createSummaryBox(descriptionSection);
+          if (summaryBox) {
+            contentEl.appendChild(summaryBox);
+          }
+        }
+
+        checkSearchResults.forEach((table) => {
+          const newTable = createTranslationTable(table);
+          contentEl.appendChild(newTable);
+        });
+
+        document.getElementById("voice-tts").style.display = "block";
+      } else {
+        notFound(str);
+      }
+    })
+    .catch(() => {
       notFound(str);
-    }
-  })
-  .catch(() => {
-    notFound(str);
-  })
-  .finally(() => {
-    document.getElementById("loading").style.display = "none";
-  });
+    })
+    .finally(() => {
+      document.getElementById("loading").style.display = "none";
+    });
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -334,6 +413,8 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("tureng").addEventListener("click", () => {
     tureng(document.getElementById("search-input").value);
   });
+
+  showHistory();
 });
 
 document
@@ -341,6 +422,14 @@ document
   .addEventListener("keypress", function (e) {
     if (e.key === "Enter") {
       tureng(document.getElementById("search-input").value);
+    }
+  });
+
+document
+  .getElementById("search-input")
+  .addEventListener("input", function (e) {
+    if (e.target.value.trim().length === 0) {
+      showHistory();
     }
   });
 
@@ -355,13 +444,15 @@ window.onload = async () => {
       func: () => getSelection().toString(),
     });
   } catch (e) {
-    return; // ignoring an unsupported page like about:addons
+    // ignoring an unsupported page like about:addons
   }
 
   const trimmedResult = result ? result.trim() : "";
   document.getElementById("search-input").value = trimmedResult;
   if (trimmedResult.length > 0) {
     document.getElementById("tureng").click();
+  } else {
+    showHistory();
   }
 };
 

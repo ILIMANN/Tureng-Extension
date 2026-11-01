@@ -2,6 +2,66 @@ body {
   min-width: 450px;
 }
 
+body.history-view {
+  min-width: 300px;
+  width: 300px;
+}
+
+body.history-view #search-input {
+  width: 276px;
+  padding: 7px 14px 7px 36px;
+  font-size: 14px;
+  background-position: 8px 8px;
+}
+
+body.history-view .search_results {
+  width: 300px;
+}
+
+.history-list {
+  margin: 0 12px 8px 12px;
+  max-height: 114px;
+  overflow-y: auto;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+}
+
+.history-list .history-item {
+  display: flex;
+  align-items: center;
+  height: 38px;
+  min-height: 38px;
+  padding: 0 12px;
+  font-size: 14px;
+  color: #212529;
+  border-left: none;
+  border-right: none;
+  border-radius: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.history-list .history-item:first-child {
+  border-top: none;
+}
+
+.history-list .history-item:last-child {
+  border-bottom: none;
+}
+
+.history-list .history-icon {
+  color: #bd1e2c;
+  margin-right: 10px;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.history-list .history-word {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 table {
   overflow: scroll;
   font-size: small;
