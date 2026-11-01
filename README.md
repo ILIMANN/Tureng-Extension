@@ -13,10 +13,10 @@
     <a href="https://addons.mozilla.org/firefox/addon/tureng-quick-dictionary/">
       <img src="https://img.shields.io/amo/v/tureng-quick-dictionary?label=Firefox%20Add-on&logo=firefox-browser&color=FF7139" alt="Firefox Add-on" />
     </a>
-    <a href="https://github.com/ILIMANN/Tureng-Firefox/releases/latest">
-      <img src="https://img.shields.io/github/v/release/ILIMANN/Tureng-Firefox?label=Chrome%20%28GitHub%20Release%29&logo=googlechrome&color=4285F4" alt="Chrome Release" />
+    <a href="https://github.com/ILIMANN/Tureng-Extension/releases/latest">
+      <img src="https://img.shields.io/github/v/release/ILIMANN/Tureng-Extension?label=Chrome%20%28GitHub%20Release%29&logo=googlechrome&color=4285F4" alt="Chrome Release" />
     </a>
-    <a href="https://github.com/ILIMANN/Tureng-Firefox/blob/main/Tureng/manifest.json">
+    <a href="https://github.com/ILIMANN/Tureng-Extension/blob/main/Tureng/manifest.json">
       <img src="https://img.shields.io/badge/Manifest-v3-success" alt="Manifest V3" />
     </a>
     <a href="https://spdx.org/licenses/MIT.html">
@@ -74,13 +74,13 @@ Install directly with one click from Mozilla Add-ons (AMO):
 > Chrome does not allow one-click installation from outside the Chrome Web Store unless **Developer Mode** is enabled.
 
 **English:**
-1. Download **[`tureng-chrome.zip`](https://github.com/ILIMANN/Tureng-Firefox/releases/latest/download/tureng-chrome.zip)** from the [latest GitHub Release](https://github.com/ILIMANN/Tureng-Firefox/releases/latest) and **unzip** it to a folder on your computer.
+1. Download **[`tureng-chrome.zip`](https://github.com/ILIMANN/Tureng-Extension/releases/latest/download/tureng-chrome.zip)** from the [latest GitHub Release](https://github.com/ILIMANN/Tureng-Extension/releases/latest) and **unzip** it to a folder on your computer.
 2. Open Chrome and go to `chrome://extensions`.
 3. Enable **Developer mode** using the toggle in the top-right corner.
 4. Click **Load unpacked** (top-left) and select the unzipped folder.
 
 **Türkçe:**
-1. [GitHub Releases](https://github.com/ILIMANN/Tureng-Firefox/releases/latest) sayfasından **[`tureng-chrome.zip`](https://github.com/ILIMANN/Tureng-Firefox/releases/latest/download/tureng-chrome.zip)** dosyasını indirin ve bilgisayarınızda bir klasöre **çıkartın (unzip)**.
+1. [GitHub Releases](https://github.com/ILIMANN/Tureng-Extension/releases/latest) sayfasından **[`tureng-chrome.zip`](https://github.com/ILIMANN/Tureng-Extension/releases/latest/download/tureng-chrome.zip)** dosyasını indirin ve bilgisayarınızda bir klasöre **çıkartın (unzip)**.
 2. Chrome tarayıcınızda adres çubuğuna `chrome://extensions` yazıp açın.
 3. Sağ üst köşedeki **Geliştirici modu (Developer mode)** anahtarını etkinleştirin.
 4. Sol üstteki **Paketlenmemiş öğe yükle (Load unpacked)** butonuna tıklayın ve çıkarttığınız klasörü seçin.

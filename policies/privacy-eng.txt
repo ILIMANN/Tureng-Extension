@@ -16,4 +16,4 @@ This extension does not use cookies or tracking of any kind. Any links (e.g., Go
 
 This extension uses locally bundled Bootstrap and Font Awesome dependencies for styling and icons.
 
-For privacy-related questions, please contact through https://github.com/ILIMANN/Tureng-Firefox.
+For privacy-related questions, please contact through https://github.com/ILIMANN/Tureng-Extension.
