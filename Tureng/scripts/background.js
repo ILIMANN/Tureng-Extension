@@ -1,9 +1,11 @@
+const ext = globalThis.browser ?? globalThis.chrome;
+
 //Create a function to open the new tab
-function newTab(info, tab) {
+function newTab(info) {
   const { menuItemId } = info;
 
   if (menuItemId === "tureng-text-search") {
-    browser.tabs.create({
+    ext.tabs.create({
       url:
         "https://tureng.com/tr/turkce-ingilizce/" +
         encodeURIComponent(info.selectionText.trim()),
@@ -13,8 +15,8 @@ function newTab(info, tab) {
 
 //Create context menu options.
 
-browser.runtime.onInstalled.addListener(() => {
-  browser.contextMenus.create({
+ext.runtime.onInstalled.addListener(() => {
+  ext.contextMenus.create({
     title: "Tureng: '%s' ",
     id: "tureng-text-search",
     contexts: ["selection"],
@@ -23,15 +25,15 @@ browser.runtime.onInstalled.addListener(() => {
 
 //This tells the context menu what function to run when the option is selected
 
-browser.contextMenus.onClicked.addListener(newTab);
+ext.contextMenus.onClicked.addListener(newTab);
 
-browser.runtime.onMessage.addListener((message) => {
+ext.runtime.onMessage.addListener((message, _sender, sendResponse) => {
   if (message?.type === "TURENG_SEARCH") {
     const url =
       "https://tureng.com/tr/turkce-ingilizce/" +
       encodeURIComponent(message.query.trim());
 
-    return fetch(url)
+    fetch(url)
       .then(async (response) => ({
         ok: response.ok,
         status: response.status,
@@ -40,7 +42,10 @@ browser.runtime.onMessage.addListener((message) => {
       .catch((error) => ({
         ok: false,
         error: error.message,
-      }));
+      }))
+      .then(sendResponse);
+
+    return true;
   }
 
   if (message?.type === "TURENG_TTS") {
@@ -48,15 +53,20 @@ browser.runtime.onMessage.addListener((message) => {
       message.text.trim()
     )}&tl=${encodeURIComponent(message.lang)}`;
 
-    return fetch(url, { credentials: "omit" })
+    fetch(url, { credentials: "omit" })
       .then(async (response) => ({
         ok: response.ok,
         status: response.status,
-        buffer: response.ok ? await response.arrayBuffer() : null,
+        buffer: response.ok
+          ? Array.from(new Uint8Array(await response.arrayBuffer()))
+          : null,
       }))
       .catch((error) => ({
         ok: false,
         error: error.message,
-      }));
+      }))
+      .then(sendResponse);
+
+    return true;
   }
 });
