@@ -414,6 +414,13 @@ document.addEventListener("DOMContentLoaded", () => {
     tureng(document.getElementById("search-input").value);
   });
 
+  document.getElementById("clear-search").addEventListener("click", () => {
+    const input = document.getElementById("search-input");
+    input.value = "";
+    showHistory();
+    input.focus();
+  });
+
   showHistory();
 });
 

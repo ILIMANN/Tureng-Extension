@@ -72,6 +72,7 @@ table tbody th {
 }
 
 #form_div {
+  position: relative;
   padding: 6px 6px 6px 6px;
 }
 
@@ -86,7 +87,33 @@ table tbody th {
   background-image: url("../images/searchicon.png");
   background-position: 10px 11px;
   background-repeat: no-repeat;
-  padding: 10px 20px 10px 40px;
+  padding: 10px 36px 10px 40px;
+}
+
+#clear-search {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  outline: none;
+  box-shadow: none;
+  padding: 4px;
+  color: #6c757d;
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 5;
+}
+
+#clear-search:hover {
+  color: #bd1e2c;
+  background: transparent;
+}
+
+body.history-view #clear-search {
+  display: none;
 }
 
 #search-input:focus {
