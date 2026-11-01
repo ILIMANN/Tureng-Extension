@@ -154,6 +154,7 @@ table tbody a:hover {
 .flag {
   height: 30px;
   width: 45px;
+  border-radius: 4px;
 }
 
 /* Add a hover effect if you want */
